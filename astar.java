@@ -10,13 +10,14 @@ import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.event.KeyEvent;
 
+//Constructor defines and creates the window
 public class astar extends JFrame{
     public static final Color DEFAULT_COLOR = Color.DARK_GRAY;
     static JButton buttonStart;
     static int spaceBetweenSquares = 2;
 
     static node[][] shapesAry = new node[16][9];
-
+    // Fills the newly created shapesAry pathfinding grid with node types to be later manipulated
     public astar( node[][] shapesAry) throws InterruptedException {
         astar.shapesAry = shapesAry;
         for (int x = 0; x < 16; x++) {
@@ -32,8 +33,8 @@ public class astar extends JFrame{
         JPanel jpa = new JPanel();
         buttonStart = new JButton("Start");
         buttonStart.setVisible(true);
-
-
+       
+        // Box allows buttons to be stacked on top of each other
         Box box1 = Box.createVerticalBox();
         box1.add(buttonStart, Component.CENTER_ALIGNMENT);
         box1.add(Box.createVerticalStrut(11));
@@ -52,7 +53,7 @@ public class astar extends JFrame{
         this.setVisible(true);
 
     }
-
+    //node class creates a modular approach: colour can be changed, and can be set as an obstacle easily
     static class node {
         int[] position = {0, 0};
         double f=0;  int g=0;  double h=0;
@@ -87,6 +88,7 @@ public class astar extends JFrame{
     }
 
     static class update extends JPanel{
+        //Finds the neighbouring nodes for the current node. Takes into account nodes at the edge of the grid
         public static int[][] findNeighbouringNodes(node currentNode, int xEnd, int yEnd){
             int[] position = currentNode.position;
             int[] top = {position[0], position[1]-1};
@@ -146,6 +148,7 @@ public class astar extends JFrame{
             searchSpace[startPt[0]][startPt[1]].setColor(Color.GREEN);
             searchSpace[endingPt[0]][endingPt[1]].setColor(Color.RED);
             int loopCount = 0;
+            
             foundRoute:
             while (openList.size() != 0 && (loopCount < 5000)) {
                 int idxLeastF = findMinFScore(openList);
@@ -184,6 +187,7 @@ public class astar extends JFrame{
                         finalRoute = backtrack(searchSpace, searchSpace[startPt[0]][startPt[1]], neighbourNodes[x], closedList);
                         System.out.println("after backtrack");
                         System.out.println("Finished.");
+                        //Breaks out of the main while loop.
                         break foundRoute;
                     }
 
@@ -192,6 +196,8 @@ public class astar extends JFrame{
                             continue outerLoop;
                         }
                     }
+                    
+                    
                     neighbourNodes[x].g = currentNode[0].g + 1;
                     neighbourNodes[x].h = calculateH(neighbourNodes[x], endNode);
                     neighbourNodes[x].f = neighbourNodes[x].g + neighbourNodes[x].h;
@@ -215,9 +221,7 @@ public class astar extends JFrame{
 
             }
 
-            System.out.println("loopcount: " + loopCount);
-
-            //timers are a thread-safe way of delaying the display of colour in a window
+            //timers are a thread-safe way of delaying the display of colour in a window (or any other timed GUI delay)
             final boolean[] t2Start = {false};
             final Timer t = new Timer(20, null);
             ArrayList<node> finalBorders = borders;
@@ -263,25 +267,6 @@ public class astar extends JFrame{
 
         }
 
-//        public void controlTimers(Color colour, ArrayList<node> f, node[][] searchSpace){
-//            final Timer t = new Timer(20, null);
-////            ArrayList<node> finalBorders = borders;
-//            t.addActionListener(new ActionListener() {
-//                int x = 0;
-//
-//                public void actionPerformed(ActionEvent e) {
-//                    searchSpace[f.get(x).position[0]][f.get(x).position[1]].setColor(colour);
-//                    repaint();
-//                    if (x > f.size() - 2) {
-////                        t2Start[0] = true;
-//                        t.stop();
-//                    }
-//                    x++;
-//                }
-//            });
-//            t.setRepeats(true);
-//            t.start();
-//        }
         //updates items on screen
         //astarsearch here
         private static volatile boolean wPressed = false;
@@ -328,6 +313,7 @@ public class astar extends JFrame{
             });
                 this.searchSpace = shapesAry;
                 System.out.println("x: "+shapesAry[15][8].position[0]+", y: "+shapesAry[15][8].position[1]);
+                //Enables the user to drag across the screen to select obstacles in one go
                 addMouseMotionListener(new MouseAdapter() {
                     @Override
                     public void mouseDragged(MouseEvent e) {
@@ -400,7 +386,7 @@ public class astar extends JFrame{
 
 
         public ArrayList<node> backtrack(node[][] searchSpace, node startNode, node endNode, ArrayList<node> finalRoute) {
-            //go through partOfRoute and check for min g score. Then colour that in cyan
+            //go through partOfRoute and check for min g score. Then colour that in differently to the rest of the grid
 
             node tempNode = endNode;
             System.out.println("endNode pos:"+Arrays.toString(startNode.position));
@@ -417,10 +403,10 @@ public class astar extends JFrame{
                     neighbourNodes[i] = searchSpace[neighbourPositions[i][0]][neighbourPositions[i][1]];
                 }
 
-                //end generation of neighbour nodes
+                //end generation of neighbour nodes for the current iteration
 
                 for (node neighbourNode : neighbourNodes) {
-                    if (neighbourNode.partOfRoute) { //is cyan
+                    if (neighbourNode.partOfRoute) { // has already been nacktracked
                         if (!neighbourNode.alreadyVisited && finalRoute.contains(neighbourNode)) {
                             neighbourNode.alreadyVisited = true;
                             candidatesForBestRoute.add(neighbourNode);
@@ -480,7 +466,7 @@ public class astar extends JFrame{
             return minG;
         }
 
-
+        //Euclidean distance between the current node and the end node
         public static double calculateH (node node1, node node2){
             return Math.sqrt(Math.pow(node1.position[0]-node2.position[0], 2) + Math.pow(node1.position[1]-node2.position[1], 2));
         }
