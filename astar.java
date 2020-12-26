@@ -53,6 +53,7 @@ public class astar extends JFrame{
         this.setVisible(true);
 
     }
+    
     //node class creates a modular approach: colour can be changed, and can be set as an obstacle easily
     static class node {
         int[] position = {0, 0};
@@ -262,8 +263,6 @@ public class astar extends JFrame{
             });
             t2.setRepeats(true);
             t2.start();
-
-//            controlTimers(Color.blue, finalRoute1, searchSpace);
 
         }
 
