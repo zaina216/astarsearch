@@ -1,6 +1,7 @@
-
+//**********************************************************************************************************
 // This code has been designed to calculate the shortest route between two user chosen points on a grid.
-// Written by Zain
+// Written by Zain A. (September 2020) 
+//**********************************************************************************************************
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -42,7 +43,8 @@ public class astar extends JFrame{
         Box box1 = Box.createVerticalBox();
         box1.add(buttonStart, Component.CENTER_ALIGNMENT);
         box1.add(Box.createVerticalStrut(11));
-
+        
+        // Sets attributes for the window for the displayed e.g. a size of 1280x720
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         update panel = new update(shapesAry);
         jpa.add(box1);
@@ -499,7 +501,8 @@ public class astar extends JFrame{
         }
 
     }
-
+    
+    // Main entry point to code. When run, all nodes are given a default config (Dark grey colour, not an obstacle, etc...)
     public static void main(String[] args){
         node[][] shapesAry = new node[16][9];
         for (int x = 0; x < 16; x++) {
