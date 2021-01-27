@@ -1,3 +1,7 @@
+
+// This code has been designed to calculate the shortest route between two user chosen points on a grid.
+// Written by Zain
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -385,7 +389,7 @@ public class astar extends JFrame{
 
 
         public ArrayList<node> backtrack(node[][] searchSpace, node startNode, node endNode, ArrayList<node> finalRoute) {
-            //go through partOfRoute and check for min g score. Then colour that in differently to the rest of the grid
+            //go through partOfRoute and check for min g score. Then colour that in differently to the rest of the grid. This builds the final path to be displayed.
 
             node tempNode = endNode;
             System.out.println("endNode pos:"+Arrays.toString(startNode.position));
